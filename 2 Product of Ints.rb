@@ -4,6 +4,8 @@
 #   given [1, 7, 3, 4]
 #   return   [84, 12, 28, 21]
 #   by calculating   [7*3*4, 1*3*4, 1*7*4, 1*7*3]
+#
+# Account for zeros? Repeated numbers?
 
 # brute force
 # loop with index
@@ -25,44 +27,46 @@ get_products_of_all_ints_except_at_index int_arr
 
 
 # optimize solution
-# linearize the process
-# start with 1
-# arr[n] = arr[n] - arr[n-1] 
-# repeat for the reverse arr
-# mult both arrays together 
+# store the mult. products to be used later
+# the first set of products should be arr[n]*arr[n-1]
+# the second should should be the inverse of this pattern
+# multiplying the sets together returns the correct product excluding 
+# the current index
 
-def get_products int_arr
-    l_arr = Array.new(int_arr.size)
-    r_arr = Array.new(int_arr.size)
+# the product of all the integers before each index: l_arr
+# the product of all the integers after each index: r_arr
+int_arr = [1, 7, 3, 4]
+def get_products ints
+    l_arr = Array.new
+    r_arr = Array.new
     
-    int_arr.each_with_index do |int, i|
-        if i == 0
-            l_arr[0] = 1
-        else
-            l_arr[i] = l_arr[i] * l_arr[i-1]
-        end
+    prev_product = 1
+    
+    start = 0
+    while start <= ints.size - 1
+        l_arr[start] = prev_product
+        prev_product *= ints[start]
+        start += 1
+    end
+
+    prev_product = 1
+    last = ints.length - 1 
+    while last >= 0
+        r_arr[last] = prev_product 
+        prev_product *= ints[last]
+        last -= 1
     end
     
-    l_arr
+    results = Array.new(ints.size)
+    i = 0
+    while i <= l_arr.size - 1 
+        results[i] = l_arr[i] * r_arr[i]
+        i+=1
+    end
+    results
 end
 
 get_products int_arr
-#Unifinished
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
